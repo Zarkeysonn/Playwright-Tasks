@@ -7,7 +7,8 @@
     "login": "npx playwright test tests/apiTests/apiLogin.spec.js",
     "register": "npx playwright test tests/apiTests/apiRegister.spec.js",
     "positive_addBook": "npx playwright test tests/apiTests/apiPostBook.spec.js",
-    "negative_addBook": "npx playwright test tests/apiTests/negativeAddBook.spec.js"
+    "negative_addBook": "npx playwright test tests/apiTests/negativeAddBook.spec.js",
+    "webTables": "npx playwright test tests/e2e/webTables.spec.js"
   },
   "repository": {
     "type": "git",
