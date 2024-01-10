@@ -15,5 +15,6 @@
     "existing_user_Username": "zarko1234",
     "userId": "636aaff1-9734-414a-bdc4-4adbb39a2b1f",
     "status201": 201,
-    "status401": 401
+    "status401": 401,
+    "firstBookTitle": "Git Pocket Guide"
 }

@@ -1,8 +1,5 @@
 import { expect } from "@playwright/test";
 import loginData from "../fixtures/loginData.json";
-import postBook from "../fixtures/postBookToUser.json";
-import exp from "constants";
-
 class apiBookstoreUtils {
   constructor(apiContext) {
     this.apiContext = apiContext;
@@ -10,7 +7,7 @@ class apiBookstoreUtils {
 
   async loginUser(unamepass) {
     const loginResponse = await this.apiContext.post(
-      "https://demoqa.com/Account/v1/GenerateToken", //promeniti api
+      "/Account/v1/GenerateToken", //promeniti api
       {
         data: unamepass,
       }
@@ -35,47 +32,40 @@ class apiBookstoreUtils {
   }
 
   async getUserId(userNamePassword) {
-    const loginRequest = await this.apiContext.post(
-      "https://demoqa.com/Account/v1/User",
-      {
-        data: userNamePassword,
-      }
-    );
+    const loginRequest = await this.apiContext.post("/Account/v1/User", {
+      data: userNamePassword,
+    });
     const body = await loginRequest.json();
     return body;
   }
 
   async authoriseUser(user) {
-    const authoriseUser = await this.apiContext.post(
-      "https://demoqa.com/Account/v1/Authorized",
-      {
-        data: user,
-      }
-    );
+    const authoriseUser = await this.apiContext.post("/Account/v1/Authorized", {
+      data: user,
+    });
     return authoriseUser;
   }
 
   // uraditi asertacije i za dobre i negativne slucajeve ovde razmisliti malo o tome
   async registerUser(unamepass) {
-    const registerResponse = await this.apiContext.post(
-      "https://demoqa.com/Account/v1/User",
-      {
-        data: unamepass,
-      }
-    );
+    const registerResponse = await this.apiContext.post("/Account/v1/User", {
+      data: unamepass,
+    });
     const registerResponseBody = await registerResponse.json();
+    console.log("registerResponse", registerResponseBody);
     return registerResponseBody;
   }
 
   async getBook() {
-    const getAllBooks = await this.apiContext.get(
-      "https://demoqa.com/BookStore/v1/Books"
-    );
+    const getAllBooks = await this.apiContext.get("/BookStore/v1/Books");
     const getAllBooksBody = await getAllBooks.json();
 
     const isbnArray = await getAllBooksBody.books.map((book) => book.isbn);
+    const titleArray = await getAllBooksBody.books.map((book) => book.title);
     const bookIsbn = isbnArray[0];
-
+    console.log("titles from apiUtils", titleArray);
+    const title = titleArray[0];
+    expect(title).toContain("Git");
     return bookIsbn;
   }
 
@@ -90,16 +80,12 @@ class apiBookstoreUtils {
       collectionOfIsbns: [{ isbn: bookIsbn }],
     };
 
-    const addBookToUser = await this.apiContext.post(
-      "https://demoqa.com/BookStore/v1/Books",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: postBookData,
-      }
-    );
-
+    const addBookToUser = await this.apiContext.post("/BookStore/v1/Books", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: postBookData,
+    });
     const statusCode = await addBookToUser.status();
     expect(statusCode).toEqual(status);
     return addBookToUser;
@@ -107,7 +93,7 @@ class apiBookstoreUtils {
 
   async deleteBooks({ userId, token }) {
     const deleteBooks = await this.apiContext.delete(
-      `https://demoqa.com/BookStore/v1/Books?UserId=${userId}`,
+      `/BookStore/v1/Books?UserId=${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -115,20 +101,19 @@ class apiBookstoreUtils {
       }
     );
     const deleteBooksStatus = await deleteBooks.status();
+    expect(deleteBooksStatus).toEqual(204);
     return deleteBooks;
   }
 
   //funkcija za brisanje accounta
-  async deleteUser(usr, token) {
+  async deleteUser({ usr, token, statusCode = 204 }) {
     const loginUser = await this.loginUser();
-    const deleteUser = await this.apiContext.delete(
-      `https://demoqa.com/Account/v1/User/${usr}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const deleteUser = await this.apiContext.delete(`/Account/v1/User/${usr}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    expect(deleteUser.status()).toEqual(statusCode);
     return deleteUser;
   }
 

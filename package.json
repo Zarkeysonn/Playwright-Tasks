@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "login": "npx playwright test tests/apiTests/apiLogin.spec.js",
+    "register": "npx playwright test tests/apiTests/apiRegister.spec.js",
+    "positive_addBook": "npx playwright test tests/apiTests/apiPostBook.spec.js",
+    "negative_addBook": "npx playwright test tests/apiTests/negativeAddBook.spec.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Zarkeysonn/Playwright-Tasks.git"
