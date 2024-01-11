@@ -1,25 +1,19 @@
-const { test, request } = require("@playwright/test");
-const { UserModules } = require("../../modules/UserModules");
-const { BookModules } = require("../../modules/BookModules");
+const { request } = require("@playwright/test");
+import { test } from "../../modules/base";
 
 import loginData from "../../fixtures/loginData.json";
 
-let apiContext;
-let userModules;
-let bookModules;
 let usernamePass;
 let token;
-let authorizeUser;
-let postBook;
 let bookIsbn;
 
 let loginUser;
 
-test.describe("Bad flow of adding books to user", async () => {
+test.describe("Bad flow of adding books to user", async ({
+  userModules,
+  bookModules,
+}) => {
   test.beforeEach(async () => {
-    apiContext = await request.newContext();
-    userModules = await new UserModules(apiContext);
-    bookModules = await new BookModules(apiContext);
     usernamePass = await userModules.setUsernamePassword(
       loginData.existing_user_Username,
       loginData.password
@@ -31,16 +25,16 @@ test.describe("Bad flow of adding books to user", async () => {
     });
     bookIsbn = await bookModules.getBook();
   });
-  test("User Id is empty string", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("User Id is empty string", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: "",
       bookIsbn: bookIsbn,
       token: token,
       status: 401,
     });
   });
-  test("User Id is empty array", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("User Id is empty array", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: [],
       bookIsbn: bookIsbn,
       token: token,
@@ -71,8 +65,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("User Id is random string", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("User Id is random string", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: "somerandomstring",
       bookIsbn: bookIsbn,
       token: token,
@@ -80,8 +74,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("User Id is random number", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("User Id is random number", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: 128921893289,
       bookIsbn: bookIsbn,
       token: token,
@@ -89,8 +83,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("User Id sent in array", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("User Id sent in array", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: [loginData.userId],
       bookIsbn: bookIsbn,
       token: token,
@@ -98,8 +92,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("Book Isbn empty string", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("Book Isbn empty string", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: loginData.userId,
       bookIsbn: "",
       token: token,
@@ -107,8 +101,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("Book Isbn array of numbers", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("Book Isbn array of numbers", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: loginData.userId,
       bookIsbn: [12, 2, 4, 34, 43, 2],
       token: token,
@@ -116,8 +110,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("Book Isbn array of strings", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("Book Isbn array of strings", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: loginData.userId,
       bookIsbn: ["dsf", "dsds", "sdds", "dsdsa"],
       token: token,
@@ -125,8 +119,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("Book Isbn empty array", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("Book Isbn empty array", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: loginData.userId,
       bookIsbn: [],
       token: token,
@@ -134,8 +128,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("Token is random string", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("Token is random string", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: loginData.userId,
       bookIsbn: bookIsbn,
       token: "thisisrandomstring",
@@ -143,8 +137,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("Token is empty string", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("Token is empty string", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: loginData.userId,
       bookIsbn: bookIsbn,
       token: "",
@@ -152,8 +146,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("Token is array of numbers", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("Token is array of numbers", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: loginData.userId,
       bookIsbn: bookIsbn,
       token: [1, 2, 3, 4, 5, 52, 23],
@@ -161,8 +155,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("Token is random numbers", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("Token is random numbers", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: loginData.userId,
       bookIsbn: bookIsbn,
       token: 3248932482349,
@@ -170,8 +164,8 @@ test.describe("Bad flow of adding books to user", async () => {
     });
   });
 
-  test("Token is empty array", async () => {
-    postBook = await bookModules.postBooksToUser({
+  test("Token is empty array", async ({ bookModules }) => {
+    await bookModules.postBooksToUser({
       userId: loginData.userId,
       bookIsbn: bookIsbn,
       token: [],

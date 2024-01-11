@@ -1,5 +1,11 @@
 // @ts-check
 const { defineConfig, devices } = require("@playwright/test");
+import dotenv from "dotenv";
+
+dotenv.config({
+  path: `./env/.env`,
+});
+//dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
 
 /**
  * Read environment variables from file.
@@ -25,7 +31,7 @@ module.exports = defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: "https://demoqa.com",
+    baseURL: process.env.BASE_URL,
     headless: false,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */

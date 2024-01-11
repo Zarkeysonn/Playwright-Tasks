@@ -1,3 +1,4 @@
+import { expect } from "@playwright/test";
 import data from "../fixtures/e2e_data.json";
 
 class WebTables {
@@ -13,6 +14,7 @@ class WebTables {
     this.modalSalary = page.locator('[id="salary"]');
     this.modalDepartment = page.locator('[id="department"]');
     this.modalSubmitButton = page.locator('[id="submit"]');
+    this.tableRow = page.locator('[role="rowgroup"] div div div');
   }
 
   async getNumberOfTableRows() {
@@ -26,24 +28,54 @@ class WebTables {
     await this.addButton.click();
   }
 
-  async editRecordInTable(row) {
-    await this.page.locator(`[id="edit-record-${row}"]`).click({ force: true });
+  async editFirstNameField({ text, successEdit = true }) {
+    await expect(this.modalFirstName).toBeVisible();
+    await this.modalFirstName.fill("");
+    await this.modalFirstName.fill(text);
+    await this.modalSubmitButton.click();
+    if (successEdit == true) {
+      await expect(this.modalWindow).not.toBeVisible();
+      await expect(this.table).toContainText(text);
+    } else {
+      await expect(this.modalWindow).toBeVisible();
+    }
   }
 
-  async fillModalRegistrationForm({
+  async editRecordInTable(row) {
+    await expect(this.table).toBeVisible();
+    await this.page.locator(`[id="edit-record-${row}"]`).click({ force: true });
+    await expect(this.modalWindow).toBeVisible();
+  }
+
+  async fillRegistrationFormAndSubmit({
     firstName = data.firstName,
     lastName = data.lastName,
     email = data.email,
     age = data.age,
     salary = data.salary,
     department = data.department,
+    success = true,
   }) {
+    const numOfRowsBefore = await this.getNumberOfTableRows();
+    await this.clickAddButton();
+    const modalRegistration = await this.modalWindow;
+    expect(await modalRegistration).toBeVisible();
+
     await this.modalFirstName.type(firstName);
     await this.modalLastName.type(lastName);
     await this.modalEmail.type(email);
     await this.modalAge.type(age);
     await this.modalSalary.type(salary, { force: true });
     await this.modalDepartment.type(department);
+
+    await this.modalSubmitButton.click();
+    if (success == true) {
+      await expect(modalRegistration).not.toBeVisible();
+    } else {
+      await expect(modalRegistration).toBeVisible();
+    }
+    const numOFRowAfter = await this.getNumberOfTableRows();
+    expect(numOFRowAfter).toEqual(numOfRowsBefore + 1);
   }
 }
 module.exports = { WebTables };

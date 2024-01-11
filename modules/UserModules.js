@@ -1,17 +1,11 @@
-import { expect } from "@playwright/test";
+import { expect, request } from "@playwright/test";
 
 class UserModules {
-  constructor(apiContext) {
-    this.apiContext = apiContext;
-  }
-
   async LoginUser({ unamepass, status = 200, statusCode = "Success" }) {
-    const loginResponse1 = await this.apiContext.post(
-      "/Account/v1/GenerateToken",
-      {
-        data: unamepass,
-      }
-    );
+    let apiContext = await request.newContext();
+    const loginResponse1 = await apiContext.post("/Account/v1/GenerateToken", {
+      data: unamepass,
+    });
     const responseBody1 = await loginResponse1.json();
     const status1 = await loginResponse1.status();
     expect(status1).toEqual(status); // status od apia
@@ -19,14 +13,16 @@ class UserModules {
   }
 
   async authoriseUser(user) {
-    const authoriseUser = await this.apiContext.post("/Account/v1/Authorized", {
+    let apiContext = await request.newContext();
+    const authoriseUser = await apiContext.post("/Account/v1/Authorized", {
       data: user,
     });
     return authoriseUser;
   }
 
   async getUserId(userNamePassword) {
-    const loginRequest = await this.apiContext.post("/Account/v1/Login", {
+    let apiContext = await request.newContext();
+    const loginRequest = await apiContext.post("/Account/v1/Login", {
       data: userNamePassword,
     });
     const body = await loginRequest.json();
@@ -34,7 +30,8 @@ class UserModules {
   }
 
   async authoriseUser({ user, status = 200 }) {
-    const authoriseUser = await this.apiContext.post("/Account/v1/Authorized", {
+    let apiContext = await request.newContext();
+    const authoriseUser = await apiContext.post("/Account/v1/Authorized", {
       data: user,
     });
     expect(authoriseUser.status()).toEqual(status);
@@ -42,7 +39,8 @@ class UserModules {
   }
 
   async registerUser({ unamepass, status = 201 }) {
-    const registerResponse = await this.apiContext.post("/Account/v1/User", {
+    let apiContext = await request.newContext();
+    const registerResponse = await apiContext.post("/Account/v1/User", {
       data: unamepass,
     });
     const registerResponseBody = await registerResponse.json();
@@ -51,7 +49,8 @@ class UserModules {
   }
 
   async deleteUser({ usr, token, statusCode = 204 }) {
-    const deleteUser = await this.apiContext.delete(`/Account/v1/User/${usr}`, {
+    let apiContext = await request.newContext();
+    const deleteUser = await apiContext.delete(`/Account/v1/User/${usr}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

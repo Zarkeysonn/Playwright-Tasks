@@ -1,12 +1,10 @@
-import { expect } from "@playwright/test";
+import { expect, request } from "@playwright/test";
 import loginData from "../fixtures/loginData.json";
 
 class BookModules {
-  constructor(apiContext) {
-    this.apiContext = apiContext;
-  }
   async getBook() {
-    const getAllBooks = await this.apiContext.get("/BookStore/v1/Books");
+    const apiContext = await request.newContext();
+    const getAllBooks = await apiContext.get("/BookStore/v1/Books");
     const getAllBooksBody = await getAllBooks.json();
     const isbnArray = await getAllBooksBody.books.map((book) => book.isbn);
     const titleArray = await getAllBooksBody.books.map((book) => book.title);
@@ -27,7 +25,8 @@ class BookModules {
       collectionOfIsbns: [{ isbn: bookIsbn }],
     };
 
-    const addBookToUser = await this.apiContext.post("/BookStore/v1/Books", {
+    const apiContext = await request.newContext();
+    const addBookToUser = await apiContext.post("/BookStore/v1/Books", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -40,7 +39,8 @@ class BookModules {
   }
 
   async deleteBooks({ userId, token, status = 204 }) {
-    const deleteBooks = await this.apiContext.delete(
+    const apiContext = await request.newContext();
+    const deleteBooks = await apiContext.delete(
       `/BookStore/v1/Books?UserId=${userId}`,
       {
         headers: {

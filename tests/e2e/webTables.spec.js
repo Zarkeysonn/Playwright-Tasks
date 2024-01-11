@@ -6,18 +6,10 @@ test.describe("Happy flow", async () => {
     const poManager = new POManager(page);
     await page.goto("/webtables");
     const webTables = poManager.getWebTables();
-    const numOFRowBefore = await webTables.getNumberOfTableRows();
-    await webTables.clickAddButton();
-    const modalRegistration = await webTables.modalWindow;
-    expect(await modalRegistration).toBeVisible();
-    expect(await webTables.modalSubmitButton).toBeEnabled();
-    await webTables.fillModalRegistrationForm({});
-    await webTables.modalSubmitButton.click();
-    await expect(modalRegistration).not.toBeVisible();
+    await webTables.fillRegistrationFormAndSubmit({});
+    // funkcija za edit :) za ovo ispod
     await webTables.editRecordInTable(1);
-    await expect(modalRegistration).toBeVisible();
-    const numOFRowAfter = await webTables.getNumberOfTableRows();
-    expect(numOFRowAfter).toEqual(numOFRowBefore + 1);
+    await page.pause();
   });
 });
 
@@ -72,5 +64,21 @@ test.describe("Bad flow", async () => {
     await webTables.fillModalRegistrationForm({ department: "" });
     await webTables.modalSubmitButton.click();
     await expect(modalRegistration).toBeVisible();
+  });
+});
+
+test.describe("Edit record in table", async () => {
+  let webTables;
+  let modalRegistration;
+  test.beforeEach(async ({ page }) => {
+    const poManager = new POManager(page);
+    webTables = poManager.getWebTables();
+    modalRegistration = await webTables.modalWindow;
+    await page.goto("/webtables");
+    webTables = poManager.getWebTables();
+  });
+  test("Change first name", async () => {
+    await webTables.editRecordInTable(1);
+    await webTables.editFirstNameField({ text: "MicaPita" });
   });
 });

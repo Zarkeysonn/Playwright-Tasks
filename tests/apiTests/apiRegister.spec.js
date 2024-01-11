@@ -1,9 +1,7 @@
-const { test, expect, request } = require("@playwright/test");
-const { UserModules } = require("../../modules/UserModules");
+import { test, expect } from "../../modules/base";
 
 import loginData from "../../fixtures/loginData.json";
 
-let apiContext;
 let usernamePass;
 let deleteUser;
 let token;
@@ -15,9 +13,7 @@ const registerPayLoad = {
 };
 
 test.describe("Happy flow", async () => {
-  test("New register user", async () => {
-    apiContext = await request.newContext();
-    userModules = await new UserModules(apiContext);
+  test("New register user", async ({ userModules }) => {
     await userModules.registerUser({
       unamepass: registerPayLoad,
     });
@@ -40,11 +36,7 @@ test.describe("Happy flow", async () => {
 });
 
 test.describe("Bad flow", async () => {
-  test.beforeEach(async () => {
-    apiContext = await request.newContext();
-    userModules = await new UserModules(apiContext);
-  });
-  test("UserName field os empty", async () => {
+  test("UserName field os empty", async ({ userModules }) => {
     const usernamePassword = await userModules.setUsernamePassword(
       loginData.emptyString,
       loginData.password
@@ -69,7 +61,7 @@ test.describe("Bad flow", async () => {
     expect(registerUser.code).toBe("1200");
   });
 
-  test("Username is emptry string of spaces", async () => {
+  test("Username is emptry string of spaces", async ({ userModules }) => {
     const usernamePassword = await userModules.setUsernamePassword(
       "          ",
       loginData.password
@@ -81,7 +73,7 @@ test.describe("Bad flow", async () => {
     expect(registerUser.code).toBe("1204");
   });
 
-  test("Username only numbers", async () => {
+  test("Username only numbers", async ({ userModules }) => {
     const usernamePassword = await userModules.setUsernamePassword(
       12345678,
       loginData.password
@@ -93,7 +85,7 @@ test.describe("Bad flow", async () => {
     expect(registerUser.code).toBe("1204");
   });
 
-  test("Username boolean", async () => {
+  test("Username boolean", async ({ userModules }) => {
     const usernamePassword = await userModules.setUsernamePassword(
       true,
       loginData.password
@@ -105,7 +97,7 @@ test.describe("Bad flow", async () => {
     expect(registerUser.code).toBe("1204");
   });
 
-  test("Password doesn't meet requirements", async () => {
+  test("Password doesn't meet requirements", async ({ userModules }) => {
     const usernamePassword = await userModules.setUsernamePassword(
       loginData.newUsername,
       loginData.test
@@ -117,7 +109,7 @@ test.describe("Bad flow", async () => {
     expect(registerUser.code).toBe("1300");
   });
 
-  test("Password lenght is less than 8", async () => {
+  test("Password lenght is less than 8", async ({ userModules }) => {
     const usernamePassword = await userModules.setUsernamePassword(
       loginData.newUsername,
       loginData.invalidPasswordLength
@@ -129,7 +121,7 @@ test.describe("Bad flow", async () => {
     expect(registerUser.code).toBe("1300");
   });
 
-  test.skip("Password with only numbers", async () => {
+  test.skip("Password with only numbers", async ({ userModules }) => {
     const usernamePassword = await userModules.setUsernamePassword(
       loginData.newUsername,
       12345678

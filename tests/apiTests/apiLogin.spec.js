@@ -1,10 +1,8 @@
-const { test, expect, request } = require("@playwright/test");
-const { UserModules } = require("../../modules/UserModules");
-
+const { request } = require("@playwright/test");
+import { test, expect } from "../../modules/base";
 import loginData from "../../fixtures/loginData.json";
 
 let apiContext;
-let userModules;
 let usernamePass;
 let response;
 
@@ -13,8 +11,19 @@ const loginPayLoad = {
   userName: loginData.username,
 };
 
+test("Basic try", async ({ userModules }) => {
+  const usernamePass = await userModules.setUsernamePassword(
+    "zarko1234",
+    loginData.password
+  );
+  response = await userModules.LoginUser({
+    unamepass: usernamePass,
+    statusCode: 200,
+  });
+});
+
 test.describe("Positive login api testing", () => {
-  test.skip("Happy flow basic", async () => {
+  test.skip("Happy flow basic", async ({ wpage, userModules }) => {
     apiContext = await request.newContext();
     const loginResponse = await apiContext.post("/Account/v1/Login", {
       data: loginPayLoad,
@@ -25,9 +34,7 @@ test.describe("Positive login api testing", () => {
     expect(loginResponseJson.username).toEqual(loginPayLoad.userName); //equal koristiti
   });
 
-  test("Valid login scenario using utils file", async () => {
-    const apiContext = await request.newContext();
-    userModules = await new UserModules(apiContext);
+  test("Valid login scenario using utils file", async ({ userModules }) => {
     const usernamePass = await userModules.setUsernamePassword(
       "zarko1234",
       loginData.password
@@ -40,12 +47,7 @@ test.describe("Positive login api testing", () => {
 });
 
 test.describe("Negative login api testing", () => {
-  test.beforeEach("Before each for creating textContext", async () => {
-    apiContext = await request.newContext();
-    userModules = await new UserModules(apiContext);
-  });
-
-  test("Bad username random string: ", async () => {
+  test("Bad username random string: ", async ({ userModules }) => {
     usernamePass = await userModules.setUsernamePassword(
       "dskjhsdfhjkdfhjkefrhjk",
       loginData.password
@@ -56,7 +58,7 @@ test.describe("Negative login api testing", () => {
     });
   });
 
-  test.only("Empty username", async () => {
+  test("Empty username", async ({ userModules }) => {
     usernamePass = await userModules.setUsernamePassword(
       loginData.emptyString,
       loginData.password
@@ -68,7 +70,7 @@ test.describe("Negative login api testing", () => {
     expect(await response.message).toEqual(loginData.messageLogin);
   });
 
-  test("Username array of strings", async () => {
+  test("Username array of strings", async ({ userModules }) => {
     usernamePass = await userModules.setUsernamePassword(
       "['ff','sdf','fdfa']",
       loginData.password
@@ -79,7 +81,7 @@ test.describe("Negative login api testing", () => {
     });
   });
 
-  test("Username empty array", async () => {
+  test("Username empty array", async ({ userModules }) => {
     usernamePass = await userModules.setUsernamePassword(
       [],
       loginData.password
@@ -90,7 +92,7 @@ test.describe("Negative login api testing", () => {
     });
   });
 
-  test("Password empty", async () => {
+  test("Password empty", async ({ userModules }) => {
     usernamePass = await userModules.setUsernamePassword(
       loginData.username,
       loginData.emptyString
@@ -101,7 +103,7 @@ test.describe("Negative login api testing", () => {
     });
   });
 
-  test("Bad password", async () => {
+  test("Bad password", async ({ userModules }) => {
     usernamePass = await userModules.setUsernamePassword(
       loginData.username,
       loginData.test
