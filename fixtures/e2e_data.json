@@ -4,5 +4,14 @@
     "email": "djurdjev.zarko@gmail.com",
     "age": "25",
     "salary": "1200",
-    "department": "informatics"
+    "department": "informatics",
+    "mobileNumber": "1234567891",
+    "currentAddress": "Suvoborska 1",
+    "state": "NCR",
+    "city": "Gurgaon",
+    "stateAndCity": "NCR Delhi",
+    "subjects": "Math",
+    "buttonStart": "Start",
+    "buttonStop": "Stop",
+    "buttonReset": "Reset"
 }
