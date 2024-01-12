@@ -9,20 +9,12 @@ class ProgressBar {
     this.progressBar = page.locator('[id="progressBar"]');
   }
 
-  /*
-    Asertuj na pocetku dugme i procenat 0%, zatim pusti dok progressBarValue ne dodje
-    do npr 69% onda klikni dugme, pa opet klikni da krene i asertuj da je gotovo 
-    progressbar 100% i dugme text Reset, klikni na dugme i asertuj text Dugmeta i 
-    progressBar value 0%
-   */
-
   async stopOnWantedValue({ value, currentValue, expectedValue }) {
     await this.startStopButton.click();
     await this.page.waitForTimeout(value);
     const progressBarValue = await this.progressBar.getAttribute(
       `aria-valuenow`
     );
-    console.log(progressBarValue, "VALUE");
     await this.startStopButton.click();
   }
 

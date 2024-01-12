@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+const { test } = require("@playwright/test");
 const { POManager } = require("../../page_object_models/POManager");
 
 test.use({
