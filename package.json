@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "login": "npx playwright test tests/apiTests/apiLogin.spec.js",
+    "test:api:login": "npx playwright test tests/apiTests/apiLogin.spec.js",
     "register": "npx playwright test tests/apiTests/apiRegister.spec.js",
     "positive_addBook": "npx playwright test tests/apiTests/apiPostBook.spec.js",
     "negative_addBook": "npx playwright test tests/apiTests/negativeAddBook.spec.js",

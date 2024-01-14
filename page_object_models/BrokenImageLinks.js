@@ -13,11 +13,8 @@ class BrokenImageLinks {
     if (image) {
       const naturalWidth = await image.getProperty("naturalWidth");
       const width = await naturalWidth.jsonValue();
-      if (width > 50) {
-        return false;
-      } else {
-        return true;
-      }
+
+      return width > 50 ? false : true;
     }
   }
 }
