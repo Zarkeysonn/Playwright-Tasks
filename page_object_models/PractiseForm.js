@@ -6,19 +6,19 @@ import { log } from "console";
 class PractiseForm {
   constructor(page) {
     this.page = page;
-    this.firstName = page.locator('[id="firstName"]');
-    this.lastName = page.locator('[id="lastName"]');
-    this.email = page.locator('[id="userEmail"]');
-    this.mobileNumber = page.locator('[id="userNumber"]');
-    this.dateOfBirth = page.locator('[id="dateOfBirthInput"]');
+    this.firstName = page.locator("#firstName");
+    this.lastName = page.locator("#lastName");
+    this.email = page.locator("#userEmail");
+    this.mobileNumber = page.locator("#userNumber");
+    this.dateOfBirth = page.locator("#dateOfBirthInput");
     this.chooseFile = page.locator('input[type="file"]');
-    this.currentAddress = page.locator('[id="currentAddress"]');
-    this.state = page.locator('[id="state"]');
-    this.stateOption = page.locator('[id="react-select-3-option-0"]');
-    this.city = page.locator('[id="city"]');
-    this.cityOption = page.locator('[id="react-select-4-option-0"]');
-    this.submitButton = page.locator('[id="submit"]');
-    this.userForm = page.locator('[id="userForm"]');
+    this.currentAddress = page.locator("#currentAddress");
+    this.state = page.locator("#state");
+    this.stateOption = page.locator("#react-select-3-option-0");
+    this.city = page.locator("#city");
+    this.cityOption = page.locator("#react-select-4-option-0");
+    this.submitButton = page.locator("#submit");
+    this.userForm = page.locator("#userForm");
     this.subjects = page.locator("#subjectsInput");
     this.table = page.locator("table");
   }

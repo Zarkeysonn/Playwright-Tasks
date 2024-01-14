@@ -32,11 +32,13 @@ class ProgressBar {
     const value = await this.getProgressBarText();
     expect(await value).toEqual("15%");
     await expect(this.startStopButton).toHaveText(data.buttonStart);
+
     await this.startStopButton.click();
     await this.page.waitForTimeout(8500);
     const newValue = await this.getProgressBarText();
     expect(await newValue).toEqual("100%");
     await expect(this.resetButton).toHaveText(data.buttonReset);
+
     await this.resetButton.click();
     const resetValue = await this.getProgressBarText();
     await expect(this.startStopButton).toHaveText(data.buttonStart);
