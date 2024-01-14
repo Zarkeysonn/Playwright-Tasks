@@ -26,7 +26,7 @@ test.describe("Bad flow of adding books to user", async ({
     bookIsbn = await bookModules.getBook();
   });
   test("User Id is empty string", async ({ bookModules }) => {
-    await bookModules.postBoodksToUser({
+    await bookModules.postBooksToUser({
       userId: "",
       bookIsbn: bookIsbn,
       token: token,

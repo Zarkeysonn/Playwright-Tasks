@@ -3,6 +3,7 @@ const { PractiseForm } = require("./PractiseForm");
 const { ProgressBar } = require("./ProgressBar");
 const { BrokenImageLinks } = require("./BrokenImageLinks");
 const { UploadAndDownload } = require("./UploadAndDownload");
+const { Alerts } = require("./Alerts");
 
 class POManager {
   constructor(page) {
@@ -12,6 +13,11 @@ class POManager {
     this.progressBar = new ProgressBar(this.page);
     this.brokenImageLinks = new BrokenImageLinks(this.page);
     this.uploadAndDownload = new UploadAndDownload(this.page);
+    this.alerts = new Alerts(this.page);
+  }
+
+  getAlerts() {
+    return this.alerts;
   }
 
   getUploadAndDownload() {
