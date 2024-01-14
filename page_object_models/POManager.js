@@ -4,6 +4,7 @@ const { ProgressBar } = require("./ProgressBar");
 const { BrokenImageLinks } = require("./BrokenImageLinks");
 const { UploadAndDownload } = require("./UploadAndDownload");
 const { Alerts } = require("./Alerts");
+const { Frames } = require("./Frames");
 
 class POManager {
   constructor(page) {
@@ -14,6 +15,11 @@ class POManager {
     this.brokenImageLinks = new BrokenImageLinks(this.page);
     this.uploadAndDownload = new UploadAndDownload(this.page);
     this.alerts = new Alerts(this.page);
+    this.frames = new Frames(this.page);
+  }
+
+  getFrames() {
+    return this.frames;
   }
 
   getAlerts() {
