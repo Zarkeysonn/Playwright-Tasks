@@ -1,4 +1,3 @@
-const { request } = require("@playwright/test");
 import { test } from "../../modules/base";
 
 import loginData from "../../fixtures/loginData.json";

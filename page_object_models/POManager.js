@@ -5,6 +5,9 @@ const { BrokenImageLinks } = require("./BrokenImageLinks");
 const { UploadAndDownload } = require("./UploadAndDownload");
 const { Alerts } = require("./Alerts");
 const { Frames } = require("./Frames");
+const { DatePicker } = require("./DatePicker");
+const { Menu } = require("./Menu");
+const { ListAndGrid } = require("./ListAndGrid");
 
 class POManager {
   constructor(page) {
@@ -16,6 +19,21 @@ class POManager {
     this.uploadAndDownload = new UploadAndDownload(this.page);
     this.alerts = new Alerts(this.page);
     this.frames = new Frames(this.page);
+    this.datePicker = new DatePicker(this.page);
+    this.menu = new Menu(this.page);
+    this.listAndGrid = new ListAndGrid(this.page);
+  }
+
+  getListAndGrid() {
+    return this.listAndGrid;
+  }
+
+  getMenu() {
+    return this.menu;
+  }
+
+  getDatePicker() {
+    return this.datePicker;
   }
 
   getFrames() {
