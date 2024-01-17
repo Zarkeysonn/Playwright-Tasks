@@ -1,22 +1,18 @@
-const { test } = require("@playwright/test");
-const { POManager } = require("../../page_object_models/POManager");
+import { test } from "../../modules/base";
 
 test.describe("Menu", async () => {
-  let listAndGrid;
-  test.beforeEach(async ({ page }) => {
-    const poManager = new POManager(page);
-    await page.goto("/sortable");
-    listAndGrid = poManager.getListAndGrid();
+  test.beforeEach(async ({ wpage }) => {
+    await wpage.goto("/sortable");
   });
-  test("item1 < item2", async () => {
+  test("LIST: item1 < item2", async ({ listAndGrid }) => {
     await listAndGrid.dragItemInList({ item1: 1, item2: 5 });
   });
 
-  test("item1 > item 2", async () => {
+  test("LIST: item1 > item 2", async ({ listAndGrid }) => {
     await listAndGrid.dragItemInList({ item1: 5, item2: 2 });
   });
 
-  test("GRID: item1 > item 2", async () => {
+  test("GRID: item1 > item 2", async ({ listAndGrid }) => {
     await listAndGrid.dragItemInList({
       item1: 5,
       item2: 2,
@@ -24,10 +20,10 @@ test.describe("Menu", async () => {
     });
   });
 
-  test("GRID: item1 < item 2", async () => {
+  test("GRID: item1 < item 2", async ({ listAndGrid }) => {
     await listAndGrid.dragItemInList({
       item1: 1,
-      item2: 4,
+      item2: 8,
       listOrGrid: "grid",
     });
   });

@@ -1,5 +1,4 @@
-const { test } = require("@playwright/test");
-const { POManager } = require("../../page_object_models/POManager");
+import { test } from "../../modules/base";
 
 test.use({
   viewport: {
@@ -8,9 +7,7 @@ test.use({
   },
 });
 
-test.only("Basic", async ({ page }) => {
-  const poManager = new POManager(page);
-  await page.goto("/automation-practice-form");
-  const practiseForm = poManager.getPractiseForm();
+test.only("Basic", async ({ wpage, practiseForm }) => {
+  await wpage.goto("/automation-practice-form");
   await practiseForm.fillPractiseFormAndValidateData({});
 });

@@ -1,14 +1,11 @@
-const { test } = require("@playwright/test");
-const { POManager } = require("../../page_object_models/POManager");
+import { test } from "../../modules/base";
 
 test.describe("Menu", async () => {
   let menu;
-  test.beforeEach(async ({ page }) => {
-    const poManager = new POManager(page);
-    await page.goto("/menu#");
-    menu = poManager.getMenu();
+  test.beforeEach(async ({ wpage }) => {
+    await wpage.goto("/menu#");
   });
-  test("Date before this day", async () => {
+  test("Date before this day", async ({ menu }) => {
     await menu.getToSubSubList();
   });
 });

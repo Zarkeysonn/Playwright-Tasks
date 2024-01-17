@@ -1,19 +1,19 @@
 import { expect } from "@playwright/test";
 
 class Alerts {
-  constructor(page) {
-    this.page = page;
-    this.instantAlert = page.locator("#alertButton");
-    this.timerAlert = page.locator("#timerAlertButton");
-    this.confirmBox = page.locator("#confirmButton");
-    this.confirmResult = page.locator("#confirmResult");
-    this.promptBox = page.locator("#promtButton");
-    this.promptResult = page.locator("#promptResult");
+  constructor(wpage) {
+    this.wpage = wpage;
+    this.instantAlert = wpage.locator("#alertButton");
+    this.timerAlert = wpage.locator("#timerAlertButton");
+    this.confirmBox = wpage.locator("#confirmButton");
+    this.confirmResult = wpage.locator("#confirmResult");
+    this.promptBox = wpage.locator("#promtButton");
+    this.promptResult = wpage.locator("#promptResult");
   }
 
   async handleInstantAlert() {
     // Enabling dialog window handler
-    await this.page.on("dialog", async (dialog) => {
+    await this.wpage.on("dialog", async (dialog) => {
       expect(dialog.type()).toContain("alert");
       expect(dialog.message()).toContain("You clicked a button");
       await dialog.accept();
@@ -22,17 +22,17 @@ class Alerts {
   }
 
   async handleTimerAlert() {
-    await this.page.on("dialog", async (dialog) => {
+    await this.wpage.on("dialog", async (dialog) => {
       expect(dialog.type()).toContain("alert");
       expect(dialog.message()).toContain("This alert appeared after 5 seconds");
       await dialog.accept();
     });
     await this.timerAlert.click();
-    await this.page.waitForTimeout(5000);
+    await this.wpage.waitForTimeout(5000);
   }
 
   async confirmAlert() {
-    await this.page.on("dialog", async (dialog) => {
+    await this.wpage.on("dialog", async (dialog) => {
       expect(dialog.type()).toContain("confirm");
       expect(dialog.message()).toContain("Do you confirm action?");
       await dialog.accept(); // click on Ok
@@ -44,7 +44,7 @@ class Alerts {
   }
 
   async promptAlert(someText) {
-    await this.page.on("dialog", async (dialog) => {
+    await this.wpage.on("dialog", async (dialog) => {
       expect(dialog.type()).toContain("prompt");
       expect(dialog.message()).toContain("Please enter your name");
       await dialog.accept(someText);

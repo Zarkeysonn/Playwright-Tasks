@@ -1,5 +1,4 @@
-const { test } = require("@playwright/test");
-const { POManager } = require("../../page_object_models/POManager");
+import { test } from "../../modules/base";
 
 test.use({
   viewport: {
@@ -8,9 +7,7 @@ test.use({
   },
 });
 
-test("Basic progress bar", async ({ page }) => {
-  const poManager = new POManager(page);
-  await page.goto("/progress-bar");
-  const progressBar = poManager.getProgressBar();
+test("Basic progress bar", async ({ wpage, progressBar }) => {
+  await wpage.goto("/progress-bar");
   await progressBar.startThenResetProgressBar();
 });

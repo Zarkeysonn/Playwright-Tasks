@@ -1,19 +1,14 @@
-const { test } = require("@playwright/test");
-const { POManager } = require("../../page_object_models/POManager");
+import { test } from "../../modules/base";
 
 test.describe("Validate download and upload buttons", async () => {
-  let poManager;
-  test.beforeEach(async ({ page }) => {
-    poManager = new POManager(page);
-    await page.goto("/upload-download");
+  test.beforeEach(async ({ wpage }) => {
+    await wpage.goto("/upload-download");
   });
-  test("download", async () => {
-    const download = poManager.getUploadAndDownload();
-    await download.downloadFile();
+  test("download", async ({ uploadAndDownload }) => {
+    await uploadAndDownload.downloadFile();
   });
 
-  test("upload", async () => {
-    const upload = poManager.getUploadAndDownload();
-    await upload.uploadFile();
+  test("upload", async ({ uploadAndDownload }) => {
+    await uploadAndDownload.uploadFile();
   });
 });

@@ -8,6 +8,7 @@ const { Frames } = require("./Frames");
 const { DatePicker } = require("./DatePicker");
 const { Menu } = require("./Menu");
 const { ListAndGrid } = require("./ListAndGrid");
+const { DroppableAndDragabble } = require("./DroppableAndDragabble");
 
 class POManager {
   constructor(page) {
@@ -22,6 +23,11 @@ class POManager {
     this.datePicker = new DatePicker(this.page);
     this.menu = new Menu(this.page);
     this.listAndGrid = new ListAndGrid(this.page);
+    this.droppableAndDragabble = new DroppableAndDragabble(this.page);
+  }
+
+  getDroppableAndDragabble() {
+    return this.droppableAndDragabble;
   }
 
   getListAndGrid() {

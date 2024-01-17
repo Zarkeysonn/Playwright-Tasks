@@ -25,7 +25,7 @@ class WebTables {
   }
 
   async clickAddButton() {
-    await this.addButton.click();
+    await this.addButton.click({ force: true });
   }
 
   async editFirstNameField({ text, successEdit = true }) {
@@ -60,22 +60,21 @@ class WebTables {
     await this.clickAddButton();
     const modalRegistration = await this.modalWindow;
     expect(await modalRegistration).toBeVisible();
-
     await this.modalFirstName.type(firstName);
     await this.modalLastName.type(lastName);
     await this.modalEmail.type(email);
     await this.modalAge.type(age);
     await this.modalSalary.type(salary, { force: true });
     await this.modalDepartment.type(department);
-
     await this.modalSubmitButton.click();
+    const numOFRowAfter = await this.getNumberOfTableRows();
     if (success == true) {
       await expect(modalRegistration).not.toBeVisible();
+      expect(numOFRowAfter).toEqual(numOfRowsBefore + 1);
     } else {
       await expect(modalRegistration).toBeVisible();
+      expect(numOFRowAfter).toEqual(numOfRowsBefore);
     }
-    const numOFRowAfter = await this.getNumberOfTableRows();
-    expect(numOFRowAfter).toEqual(numOfRowsBefore + 1);
   }
 }
 module.exports = { WebTables };

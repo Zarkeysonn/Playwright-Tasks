@@ -7,174 +7,142 @@ class ListAndGrid {
     this.gridTab = page.locator("#demo-tab-grid");
   }
 
+  async getCurrentList() {
+    const itemListLocator = `#demo-tabpane-list > div > div`;
+    const arrayAfter = [];
+
+    const itemListAfter = await this.page.$$(itemListLocator);
+    if (itemListAfter.length > 0) {
+      for (const item1 of itemListAfter) {
+        const text1 = await item1.innerText();
+        arrayAfter.push(text1);
+      }
+    }
+    return arrayAfter;
+  }
+
+  async getGridItemList() {
+    const array = [];
+    const itemListLocator = `#demo-tabpane-grid > div > div > div`;
+    const itemList = await this.page.$$(itemListLocator);
+    if (itemList.length > 0) {
+      for (const item of itemList) {
+        const text = await item.innerText();
+        array.push(text);
+      }
+    } else {
+      console.log("No items found with the specified locator.");
+    }
+    return array;
+  }
+
+  async getIndexOfItem(item, array) {
+    var indexOfItem2AfterDrag;
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] === item) {
+        indexOfItem2AfterDrag = i;
+        break;
+      }
+    }
+    return indexOfItem2AfterDrag;
+  }
+
   async dragItemInList({ item1, item2, listOrGrid = "list" }) {
     switch (listOrGrid) {
       case "list":
-        var locatorItem1 = await this.page.locator(
+        const locatorItem1 = await this.page.locator(
           `#demo-tabpane-${listOrGrid} > div > div:nth-child(${item1})`
         );
-        var itemText1 = await this.page
-          .locator(
-            `#demo-tabpane-${listOrGrid} > div > div:nth-child(${item1})`
-          )
-          .textContent();
-
-        var itemText2 = await this.page
-          .locator(
-            `#demo-tabpane-${listOrGrid} > div > div:nth-child(${item2})`
-          )
-          .textContent();
-        var locatorItem2 = await this.page.locator(
+        const itemText1 = await locatorItem1.textContent();
+        const locatorItem2 = await this.page.locator(
           `#demo-tabpane-${listOrGrid} > div > div:nth-child(${item2})`
         );
-        var arrayBefore = [];
-
-        var itemListLocator = `#demo-tabpane-${listOrGrid} > div > div`;
-
-        var itemList = await this.page.$$(itemListLocator);
-        if (itemList.length > 0) {
-          for (const item of itemList) {
-            const text = await item.innerText();
-            arrayBefore.push(text);
-          }
-        } else {
-          console.log("No items found with the specified locator.");
-        }
-
-        var indexOfItem2BeforeDrag;
-        for (let i = 0; i < arrayBefore.length; i++) {
-          if (arrayBefore[i] === itemText2) {
-            indexOfItem2BeforeDrag = i;
-            break;
-          }
-        }
-
-        await expect(locatorItem1).toHaveText(itemText1);
-        await expect(locatorItem2).toHaveText(itemText2);
-        await this.page
-          .locator(
-            `#demo-tabpane-${listOrGrid} > div > div:nth-child(${item1})`
-          )
-          .dragTo(
-            this.page.locator(
-              `#demo-tabpane-${listOrGrid} > div > div:nth-child(${item2})`
-            )
-          );
-
-        const arrayAfter = [];
-
-        const itemListAfter = await this.page.$$(itemListLocator);
-        if (itemListAfter.length > 0) {
-          for (const item1 of itemListAfter) {
-            const text1 = await item1.innerText();
-            arrayAfter.push(text1);
-          }
-        }
-
-        var indexOfItem2AfterDrag;
-        for (let i = 0; i < arrayAfter.length; i++) {
-          if (arrayAfter[i] === itemText2) {
-            indexOfItem2AfterDrag = i;
-            break;
-          }
-        }
-
-        var indexOfItem1AfterDrag;
-        for (let i = 0; i < arrayAfter.length; i++) {
-          if (arrayAfter[i] === itemText1) {
-            indexOfItem1AfterDrag = i;
-            break;
-          }
-        }
-
+        const itemText2 = await locatorItem2.textContent();
+        var listLocators = {
+          locatorItem1,
+          itemText1,
+          locatorItem2,
+          itemText2,
+        };
+        const arrayBefore = await this.getCurrentList();
+        var index2Before = await this.getIndexOfItem(
+          listLocators.itemText2,
+          arrayBefore
+        );
+        await expect(listLocators.locatorItem1).toHaveText(
+          listLocators.itemText1
+        );
+        await expect(listLocators.locatorItem2).toHaveText(
+          listLocators.itemText2
+        );
+        await listLocators.locatorItem1.dragTo(listLocators.locatorItem2);
+        const afterArray = await this.getCurrentList();
+        var index2After = await this.getIndexOfItem(
+          listLocators.itemText2,
+          afterArray
+        );
+        var index1After = await this.getIndexOfItem(
+          listLocators.itemText1,
+          afterArray
+        );
         break;
-
       case "grid":
         await this.gridTab.click();
-        locatorItem1 = await this.page.locator(
-          `#demo-tabpane-${listOrGrid} > div > div > div:nth-child(${item1})`
+        const gridLocatorItem1 = await this.page.locator(
+          `#demo-tabpane-grid > div > div > div:nth-child(${item1})`
         );
-        itemText1 = await this.page
-          .locator(
-            `#demo-tabpane-${listOrGrid} > div > div > div:nth-child(${item1})`
-          )
-          .textContent();
-
-        itemText2 = await this.page
-          .locator(
-            `#demo-tabpane-${listOrGrid} > div > div > div:nth-child(${item2})`
-          )
-          .textContent();
-        locatorItem2 = await this.page.locator(
-          `#demo-tabpane-${listOrGrid} > div > div > div:nth-child(${item2})`
+        const gridItemText1 = await gridLocatorItem1.textContent();
+        const gridLocatorItem2 = await this.page.locator(
+          `#demo-tabpane-grid > div > div > div:nth-child(${item2})`
         );
-        arrayBefore = [];
-
-        itemListLocator = `#demo-tabpane-${listOrGrid} > div > div > div`;
-
-        itemList = await this.page.$$(itemListLocator);
-        if (itemList.length > 0) {
-          for (const item of itemList) {
-            const text = await item.innerText();
-            arrayBefore.push(text);
-          }
-        } else {
-          console.log("No items found with the specified locator.");
-        }
-
-        var indexOfItem2BeforeDrag;
-        for (let i = 0; i < arrayBefore.length; i++) {
-          if (arrayBefore[i] === itemText2) {
-            indexOfItem2BeforeDrag = i;
-            break;
-          }
-        }
-
-        await expect(locatorItem1).toHaveText(itemText1);
-        await expect(locatorItem2).toHaveText(itemText2);
-        await this.page
-          .locator(
-            `#demo-tabpane-${listOrGrid} > div > div > div:nth-child(${item1})`
-          )
-          .dragTo(
-            this.page.locator(
-              `#demo-tabpane-${listOrGrid} > div > div > div:nth-child(${item2})`
-            )
-          );
-
-        var arrayAfterGrid = [];
-
-        const itemListAfterGrid = await this.page.$$(itemListLocator);
-        if (itemListAfterGrid.length > 0) {
-          for (const item1 of itemListAfterGrid) {
-            const text1 = await item1.innerText();
-            arrayAfterGrid.push(text1);
-          }
-        }
-
-        for (let i = 0; i < arrayAfterGrid.length; i++) {
-          if (arrayAfterGrid[i] === itemText2) {
-            indexOfItem2AfterDrag = i;
-            break;
-          }
-        }
-
-        for (let i = 0; i < arrayAfterGrid.length; i++) {
-          if (arrayAfterGrid[i] === itemText1) {
-            indexOfItem1AfterDrag = i;
-            break;
-          }
-        }
-        break;
+        const gridItemText2 = await gridLocatorItem2.textContent();
+        var gridLocators = {
+          gridLocatorItem1,
+          gridItemText1,
+          gridLocatorItem2,
+          gridItemText2,
+        };
+        const arrayBeforeGrid = await this.getGridItemList();
+        var indexOfItem2BeforeDrag = await this.getIndexOfItem(
+          gridLocators.gridItemText2,
+          arrayBeforeGrid
+        );
+        await expect(gridLocators.gridLocatorItem1).toHaveText(
+          gridLocators.gridItemText1
+        );
+        await expect(gridLocators.gridLocatorItem2).toHaveText(
+          gridLocators.gridItemText2
+        );
+        await gridLocators.gridLocatorItem1.dragTo(
+          gridLocators.gridLocatorItem2
+        );
+        var arrayAfterGrid = await this.getGridItemList();
+        var index2AfterGrid = await this.getIndexOfItem(
+          gridLocators.gridItemText2,
+          arrayAfterGrid
+        );
     }
-
-    if (item1 > item2) {
-      expect(indexOfItem2AfterDrag).toEqual(indexOfItem2BeforeDrag + 1);
-    } else {
-      expect(indexOfItem2AfterDrag).toEqual(indexOfItem2BeforeDrag - 1);
+    if (listOrGrid === "list") {
+      if (item1 > item2) {
+        expect(index2After).toEqual(index2Before + 1);
+      } else {
+        expect(index2After).toEqual(index2Before - 1);
+      }
+      await expect(await listLocators.locatorItem2).toHaveText(
+        await listLocators.itemText1
+      );
+      expect(index1After).toEqual(index2Before);
     }
-    expect(indexOfItem1AfterDrag).toEqual(indexOfItem2BeforeDrag);
-    await expect(await locatorItem2).toHaveText(await itemText1);
+    if (listOrGrid === "grid") {
+      if (item1 > item2) {
+        expect(index2AfterGrid).toEqual(indexOfItem2BeforeDrag + 1);
+      } else {
+        expect(index2AfterGrid).toEqual(indexOfItem2BeforeDrag - 1);
+      }
+      await expect(await gridLocators.gridLocatorItem2).toHaveText(
+        await gridLocators.gridItemText1
+      );
+    }
   }
 }
 module.exports = { ListAndGrid };
