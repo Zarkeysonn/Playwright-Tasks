@@ -1,6 +1,8 @@
 const { expect } = require("@playwright/test");
 import color from "../fixtures/color_values.json";
 import dragDrop from "../fixtures/dragDrop.json";
+import folderPath from "../fixtures/folderPath.json";
+import data from "../fixtures/e2e_data.json";
 
 class DroppableAndDragabble {
   constructor(page) {
@@ -27,6 +29,92 @@ class DroppableAndDragabble {
     this.revertDroppable = page.locator(
       'div[id="revertableDropContainer"] div[id="droppable"]'
     );
+    this.dragMeSimple = page.locator("#dragBox");
+    this.axisRestrictedTab = page.locator(
+      "#draggableExample-tab-axisRestriction"
+    );
+    this.onlyX = page.locator("#restrictedX");
+    this.onlyY = page.locator("#restrictedY");
+    this.restrictedTab = page.locator(
+      "#draggableExample-tab-containerRestriction"
+    );
+    this.restrictedWithinBox = page.locator("#containmentWrapper > div");
+    this.restrictedContainmentWrapper = page.locator("#containmentWrapper");
+    this.stickToCenter = page.locator("#cursorCenter");
+    this.stickToLeft = page.locator("#cursorTopLeft");
+    this.stickToBottom = page.locator("#cursorBottom");
+  }
+
+  async getCurrentCursor({ element, expectedCursorStyle = data.cursor.auto }) {
+    if (element) {
+      const elementBound = await element.boundingBox();
+      await this.page.mouse.move(elementBound.x, elementBound.y);
+      await this.page.mouse.down();
+      await this.page.mouse.move(elementBound.x + 15, elementBound.y);
+      const cursorStyle = await this.page.evaluate(() => {
+        const body = document.body;
+        const computedStyle = window.getComputedStyle(body);
+        return computedStyle.cursor;
+      });
+      expect(cursorStyle).toBe(expectedCursorStyle);
+    }
+  }
+
+  async getDistance(x1, y1, x2, y2) {
+    let y = x2 - x1;
+    let x = y2 - y1;
+    return Math.sqrt(x * x + y * y);
+  }
+
+  async moveOnlyOnAxis({ element, axiValue }) {
+    await this.axisRestrictedTab.click();
+    const elementBoundBeforeDrag = await element.boundingBox();
+    await expect(this.onlyX).toBeVisible();
+    if (element === this.onlyX) {
+      await this.page.screenshot({
+        path: folderPath.beforeAxiX,
+      });
+      await this.page.mouse.move(
+        await elementBoundBeforeDrag.x,
+        await elementBoundBeforeDrag.y
+      );
+      await this.page.mouse.down();
+      await this.page.mouse.move(
+        (await elementBoundBeforeDrag.x) + axiValue,
+        await elementBoundBeforeDrag.y
+      );
+      await this.page.mouse.up();
+      await this.page.screenshot({
+        path: folderPath.afterAxiX,
+      });
+    } else {
+      await this.page.screenshot({
+        path: folderPath.beforeAxiY,
+      });
+      await this.page.mouse.move(
+        await elementBoundBeforeDrag.x,
+        await elementBoundBeforeDrag.y
+      );
+      await this.page.mouse.down();
+      await this.page.mouse.move(
+        await elementBoundBeforeDrag.x,
+        (await elementBoundBeforeDrag.y) + axiValue
+      );
+      await this.page.mouse.up();
+      await this.page.screenshot({
+        path: folderPath.afterAxiY,
+      });
+      const elementBoundAfterDrag = await element.boundingBox();
+      if (element === this.onlyX) {
+        expect(await elementBoundAfterDrag.x).toEqual(
+          (await elementBoundBeforeDrag.x) + axiValue
+        );
+      } else {
+        expect(await elementBoundAfterDrag.y).toEqual(
+          (await elementBoundBeforeDrag.y) + axiValue
+        );
+      }
+    }
   }
 
   async getRevertElementsBounds() {
@@ -60,6 +148,30 @@ class DroppableAndDragabble {
     await this.page.mouse.down();
     await this.page.mouse.move(await obj2.x, await obj2.y);
     await this.page.mouse.up();
+  }
+
+  async dragElement(element, xValue, yValue) {
+    const elementBoundBeforeDrag = await element.boundingBox();
+    await this.page.screenshot({
+      path: folderPath.dragElementBefore,
+    });
+    await this.page.mouse.move(
+      await elementBoundBeforeDrag.x,
+      await elementBoundBeforeDrag.y
+    );
+    await this.page.mouse.down();
+    await this.page.mouse.move(
+      (await elementBoundBeforeDrag.x) + xValue,
+      (await elementBoundBeforeDrag.y) + yValue
+    );
+    const elementBoundAfterDrag = await element.boundingBox();
+    await this.page.screenshot({
+      path: folderPath.dragElementAfter,
+    });
+    await this.page.mouse.up();
+    expect(await elementBoundBeforeDrag).not.toEqual(
+      await elementBoundAfterDrag
+    );
   }
 
   async getAcceptableElementsBounds() {

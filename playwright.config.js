@@ -18,6 +18,14 @@ dotenv.config({
  */
 module.exports = defineConfig({
   testDir: "./tests",
+  // expect: {
+  //   timeout: 10000,
+  //   toMatchSnapshot: {
+  //     threshold: 0.3,
+  //     // maxDiffPixels: 10000,
+  //     maxDiffPixelRatio: 0.4,
+  //   },
+  // },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

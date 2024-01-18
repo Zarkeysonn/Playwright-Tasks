@@ -1,0 +1,8 @@
+{
+  "beforeAxiX": "screenshotsFolder/screenshotBeforeAxiX.png",
+  "afterAxiX": "screenshotsFolder/screenshotAfterAxiX.png",
+  "beforeAxiY": "screenshotsFolder/screenshotBeforeAxiY.png",
+  "afterAxiY": "screenshotsFolder/screenshotAfterAxiY.png",
+  "dragElementBefore": "screenshotsFolder/screenshotBefore.png",
+  "dragElementAfter": "screenshotsFolder/screenshotAfter.png"
+}
