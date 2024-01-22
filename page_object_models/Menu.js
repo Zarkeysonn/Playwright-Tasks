@@ -1,10 +1,8 @@
-// //a[text()='Sub Sub Item 2'] dobavljanje pojedinacnog li itema
 import color from "../fixtures/color_values.json";
 
 const { expect } = require("@playwright/test");
-const exp = require("constants");
 
-class Menu {
+export class Menu {
   constructor(page) {
     this.page = page;
     this.menu = page.locator('div [id="nav"]');
@@ -52,4 +50,3 @@ class Menu {
     );
   }
 }
-module.exports = { Menu };

@@ -3,29 +3,24 @@ import { expect, request } from "@playwright/test";
 class UserModules {
   async LoginUser({ unamepass, status = 200, statusCode = "Success" }) {
     let apiContext = await request.newContext();
-    const loginResponse1 = await apiContext.post("/Account/v1/GenerateToken", {
+    const loginResponse = await apiContext.post("/Account/v1/GenerateToken", {
       data: unamepass,
     });
-    const responseBody1 = await loginResponse1.json();
-    const status1 = await loginResponse1.status();
-    expect(status1).toEqual(status); // status od apia
-    return responseBody1;
+    expect(loginResponse.status()).toEqual(status);
+    return await loginResponse.json();
   }
 
-  async authoriseUser(user) {
-    let apiContext = await request.newContext();
-    const authoriseUser = await apiContext.post("/Account/v1/Authorized", {
-      data: user,
-    });
-    return authoriseUser;
-  }
-
-  async getUserId(userNamePassword) {
+  async getUserId({ username, password }) {
     let apiContext = await request.newContext();
     const loginRequest = await apiContext.post("/Account/v1/Login", {
-      data: userNamePassword,
+      data: {
+        userName: username,
+        password: password,
+      },
     });
     const body = await loginRequest.json();
+    expect(await body.username).toEqual(username);
+    expect(await body.password).toEqual(password);
     return body;
   }
 
@@ -35,9 +30,10 @@ class UserModules {
       data: user,
     });
     expect(authoriseUser.status()).toEqual(status);
-    return authoriseUser;
+    return;
   }
 
+  // uraditi svugde sa 2 parama uname i pass kao poslati objekat
   async registerUser({ unamepass, status = 201 }) {
     let apiContext = await request.newContext();
     const registerResponse = await apiContext.post("/Account/v1/User", {
@@ -45,6 +41,8 @@ class UserModules {
     });
     const registerResponseBody = await registerResponse.json();
     expect(registerResponse.status()).toEqual(status);
+    expect(registerResponseBody.username).not.toBe("");
+    expect(registerResponseBody.userID).not.toBe("");
     return registerResponseBody;
   }
 

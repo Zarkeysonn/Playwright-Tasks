@@ -18,14 +18,17 @@ test.describe("Happy flow", async () => {
       unamepass: registerPayLoad,
     });
     usernamePass = await userModules.setUsernamePassword(
-      "testic1234",
-      "ZarkeysonxD1!"
+      loginData.testic1234,
+      loginData.password
     );
     const loginResponse = await userModules.LoginUser({
       unamepass: usernamePass,
     });
     token = await loginResponse.token;
-    const loginRequestUserId = await userModules.getUserId(registerPayLoad);
+    const loginRequestUserId = await userModules.getUserId({
+      username: usernamePass.userName,
+      password: usernamePass.password,
+    });
     await userModules.authoriseUser({ user: usernamePass });
     deleteUser = await userModules.deleteUser({
       usr: loginRequestUserId.userId,

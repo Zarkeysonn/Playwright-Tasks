@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import data from "../fixtures/e2e_data.json";
 
-class ProgressBar {
+export class ProgressBar {
   constructor(page) {
     this.page = page;
     this.startStopButton = page.locator('[id="startStopButton"]');
@@ -9,18 +9,19 @@ class ProgressBar {
     this.progressBar = page.locator('[id="progressBar"]');
   }
 
-  async stopOnWantedValue({ value, currentValue, expectedValue }) {
+  async stopOnWantedValue({ value }) {
     await this.startStopButton.click();
     await this.page.waitForTimeout(value);
     const progressBarValue = await this.progressBar.getAttribute(
       `aria-valuenow`
     );
+    expect(await progressBarValue).not.toBe(0);
     await this.startStopButton.click();
   }
 
   async getProgressBarText() {
-    const progressBar = await this.page.waitForSelector("#progressBar");
-    const progressBarText = await progressBar.textContent();
+    const progressBarText = await this.progressBar.textContent();
+    expect(await progressBarText).not.toBe("");
     return progressBarText ? progressBarText.trim() : null;
   }
 
@@ -45,5 +46,3 @@ class ProgressBar {
     expect(await resetValue).toEqual("0%");
   }
 }
-
-module.exports = { ProgressBar };

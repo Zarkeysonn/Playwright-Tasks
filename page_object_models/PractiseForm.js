@@ -1,9 +1,7 @@
 import { expect } from "@playwright/test";
 import data from "../fixtures/e2e_data.json";
 import path from "path";
-import { log } from "console";
-
-class PractiseForm {
+export class PractiseForm {
   constructor(page) {
     this.page = page;
     this.firstName = page.locator("#firstName");
@@ -12,6 +10,8 @@ class PractiseForm {
     this.mobileNumber = page.locator("#userNumber");
     this.dateOfBirth = page.locator("#dateOfBirthInput");
     this.chooseFile = page.locator('input[type="file"]');
+    this.chooseFileContainer = page.locator("#uploadPicture");
+    this.fileForm = page.locator(".form-file");
     this.currentAddress = page.locator("#currentAddress");
     this.state = page.locator("#state");
     this.stateOption = page.locator("#react-select-3-option-0");
@@ -20,6 +20,7 @@ class PractiseForm {
     this.submitButton = page.locator("#submit");
     this.userForm = page.locator("#userForm");
     this.subjects = page.locator("#subjectsInput");
+    this.subjectsWrapper = page.locator("#subjectsWrapper");
     this.table = page.locator("table");
   }
 
@@ -36,8 +37,8 @@ class PractiseForm {
   }
 
   async dateValue() {
-    //
     const dateValu = await this.dateOfBirth.getAttribute("value");
+    expect(await dateValu).not.toBe("");
     return dateValu;
   }
 
@@ -46,19 +47,22 @@ class PractiseForm {
     const element = await this.page.locator(".subjects-auto-complete__menu");
     await this.subjects.type("ma");
     await element.click();
+    await expect(this.subjectsWrapper).toContainText(data.subjects);
   }
 
   async selectState() {
     await this.page.evaluate(() => {
       window.scrollBy(0, 60);
     });
-    await this.state.click({ force: true });
+    await this.state.click();
     await this.stateOption.click();
+    await expect(this.state).toContainText(data.stateOption);
   }
 
   async selectCity() {
     await this.city.click();
     await this.cityOption.click();
+    await expect(this.city).toContainText(data.cityOption);
   }
 
   async selectHobbies(num) {
@@ -78,6 +82,7 @@ class PractiseForm {
     const dateString = await this.dateValue();
     const dateObject = new Date(dateString);
     const monthInFull = dateObject.toLocaleString("default", { month: "long" });
+    expect(monthInFull).not.toBe("");
     return monthInFull;
   }
 
@@ -86,6 +91,7 @@ class PractiseForm {
     const dateParts = dateString.split(" ");
     const [day, month, year] = dateParts;
     const resultArray = [day, month, year];
+    expect(resultArray).not.toBe("");
     return resultArray;
   }
 
@@ -100,7 +106,6 @@ class PractiseForm {
     await expect(this.userForm).toBeVisible();
     await this.firstName.type(firstName);
     const monthValue = await this.getMonthFullValue();
-    console.log(monthValue);
     const date = await this.getDateInArray();
     await this.lastName.type(lastName);
     await this.selectGender(1);
@@ -125,4 +130,3 @@ class PractiseForm {
     expect(await this.table).toContainText(data.stateAndCity);
   }
 }
-module.exports = { PractiseForm };

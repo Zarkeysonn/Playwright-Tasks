@@ -11,7 +11,7 @@ test.describe("Validate links and images", async () => {
     wpage,
     brokenImageLinks,
   }) => {
-    await wpage.goto("https://demoqa.com/broken");
+    await wpage.goto("/broken");
     const image = await brokenImageLinks.brokenImage;
     const t = await brokenImageLinks.isImageBroken(image);
   });

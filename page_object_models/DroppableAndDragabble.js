@@ -4,7 +4,7 @@ import dragDrop from "../fixtures/dragDrop.json";
 import folderPath from "../fixtures/folderPath.json";
 import data from "../fixtures/e2e_data.json";
 
-class DroppableAndDragabble {
+export class DroppableAndDragabble {
   constructor(page) {
     this.page = page;
     this.draggable = page.locator("#draggable");
@@ -56,7 +56,8 @@ class DroppableAndDragabble {
         const computedStyle = window.getComputedStyle(body);
         return computedStyle.cursor;
       });
-      expect(cursorStyle).toBe(expectedCursorStyle);
+      expect(await element).toBeVisible();
+      expect(await cursorStyle).toBe(expectedCursorStyle);
     }
   }
 
@@ -252,4 +253,3 @@ class DroppableAndDragabble {
     }
   }
 }
-module.exports = { DroppableAndDragabble };

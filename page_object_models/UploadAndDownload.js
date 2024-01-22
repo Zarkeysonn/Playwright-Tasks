@@ -1,6 +1,6 @@
 const { expect } = require("@playwright/test");
 
-class UploadAndDownload {
+export class UploadAndDownload {
   constructor(page) {
     this.page = page;
     this.downloadButton = page.locator("#downloadButton");
@@ -29,4 +29,3 @@ class UploadAndDownload {
     await expect(this.uploadedFile).toContainText(fileName);
   }
 }
-module.exports = { UploadAndDownload };

@@ -1,19 +1,19 @@
 import { expect } from "@playwright/test";
 import moment from "moment";
 
-class DatePicker {
-  constructor(wpage) {
-    this.wpage = wpage;
-    this.datePicker = wpage.locator("#datePickerMonthYearInput"); // mm dd yyyy
-    this.afterDatePicker = wpage.locator("#datePickerMonthYear");
-    this.nextMonthButton = wpage.locator('[aria-label="Next Month"]');
-    this.previousMonthButton = wpage.locator('[aria-label="Previous Month"]');
+export class DatePicker {
+  constructor(page) {
+    this.page = page;
+    this.datePicker = page.locator("#datePickerMonthYearInput"); // mm dd yyyy
+    this.afterDatePicker = page.locator("#datePickerMonthYear");
+    this.nextMonthButton = page.locator('[aria-label="Next Month"]');
+    this.previousMonthButton = page.locator('[aria-label="Previous Month"]');
   }
 
   async selectDate(date, dateToSelect) {
-    const mmYY = this.wpage.locator(
-      '//*[@id="datePickerMonthYear"]/div[2]/div[2]/div/div/div[2]/div[1]/div[1]'
-    );
+    await this.datePicker.click();
+    const mmYY = this.page.locator(`.react-datepicker__current-month`);
+    await expect(await mmYY).toBeVisible();
     this.datePicker.click();
     const thisMonth = moment(dateToSelect, "MMMM YYYY").isBefore();
     while ((await mmYY.textContent()) != dateToSelect) {
@@ -23,7 +23,16 @@ class DatePicker {
         await this.nextMonthButton.click();
       }
     }
-    await this.wpage.click(`//div[text()="${date}"]`);
+    await this.page.click(`//div[text()="${date}"]`);
+    await await this.page.pause();
+    await expect(await mmYY).not.toBeVisible();
+    await expect(this.datePicker).not.toBeEmpty();
+  }
+
+  async getCurrentDate() {
+    const options = { year: "numeric", month: "long" };
+    const currentDate = new Date();
+    return currentDate.toLocaleDateString("en-US", options);
   }
 
   async fillSecondDateWithFillMethod(date) {
@@ -31,4 +40,3 @@ class DatePicker {
     expect(this.datePicker).toHaveValue(date);
   }
 }
-module.exports = { DatePicker };

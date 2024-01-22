@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import data from "../fixtures/e2e_data.json";
 
-class WebTables {
+export class WebTables {
   constructor(page) {
     this.page = page;
     this.addButton = page.locator('[id="addNewRecordButton"]');
@@ -77,4 +77,3 @@ class WebTables {
     }
   }
 }
-module.exports = { WebTables };

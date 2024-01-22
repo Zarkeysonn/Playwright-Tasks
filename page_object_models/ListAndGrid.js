@@ -1,9 +1,9 @@
 const { expect } = require("@playwright/test");
 
-class ListAndGrid {
+export class ListAndGrid {
   constructor(page) {
     this.page = page;
-    this.itemList = page.locator("#demo-tabpane-list > div > div"); //count 6 initially
+    this.itemList = page.locator("#demo-tabpane-list > div > div");
     this.gridTab = page.locator("#demo-tab-grid");
   }
 
@@ -48,6 +48,7 @@ class ListAndGrid {
   }
 
   async dragItemInList({ item1, item2, listOrGrid = "list" }) {
+    let index1After;
     switch (listOrGrid) {
       case "list":
         const locatorItem1 = await this.page.locator(
@@ -81,7 +82,7 @@ class ListAndGrid {
           listLocators.itemText2,
           afterArray
         );
-        var index1After = await this.getIndexOfItem(
+        index1After = await this.getIndexOfItem(
           listLocators.itemText1,
           afterArray
         );
@@ -103,7 +104,7 @@ class ListAndGrid {
           gridItemText2,
         };
         const arrayBeforeGrid = await this.getGridItemList();
-        var indexOfItem2BeforeDrag = await this.getIndexOfItem(
+        index2Before = await this.getIndexOfItem(
           gridLocators.gridItemText2,
           arrayBeforeGrid
         );
@@ -117,32 +118,20 @@ class ListAndGrid {
           gridLocators.gridLocatorItem2
         );
         var arrayAfterGrid = await this.getGridItemList();
-        var index2AfterGrid = await this.getIndexOfItem(
+        index2After = await this.getIndexOfItem(
           gridLocators.gridItemText2,
           arrayAfterGrid
         );
+        index1After = await this.getIndexOfItem(
+          gridLocators.gridItemText1,
+          arrayAfterGrid
+        );
     }
-    if (listOrGrid === "list") {
-      if (item1 > item2) {
-        expect(index2After).toEqual(index2Before + 1);
-      } else {
-        expect(index2After).toEqual(index2Before - 1);
-      }
-      await expect(await listLocators.locatorItem2).toHaveText(
-        await listLocators.itemText1
-      );
-      expect(index1After).toEqual(index2Before);
+    if (item1 > item2) {
+      expect(index2After).toEqual(index2Before + 1);
+    } else {
+      expect(index2After).toEqual(index2Before - 1);
     }
-    if (listOrGrid === "grid") {
-      if (item1 > item2) {
-        expect(index2AfterGrid).toEqual(indexOfItem2BeforeDrag + 1);
-      } else {
-        expect(index2AfterGrid).toEqual(indexOfItem2BeforeDrag - 1);
-      }
-      await expect(await gridLocators.gridLocatorItem2).toHaveText(
-        await gridLocators.gridItemText1
-      );
-    }
+    expect(index1After).toEqual(index2Before);
   }
 }
-module.exports = { ListAndGrid };

@@ -1,6 +1,6 @@
 const { expect } = require("@playwright/test");
 
-class Frames {
+export class Frames {
   constructor(page) {
     this.page = page;
   }
@@ -23,4 +23,3 @@ class Frames {
     await expect(frameContentLocator).toContainText(frameContent);
   }
 }
-module.exports = { Frames };

@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 
-class BrokenImageLinks {
+export class BrokenImageLinks {
   constructor(page) {
     this.page = page;
     this.brokenImage = page.locator('[src="/images/Toolsqa_1.jpg"]');
@@ -13,10 +13,8 @@ class BrokenImageLinks {
     if (image) {
       const naturalWidth = await image.getProperty("naturalWidth");
       const width = await naturalWidth.jsonValue();
-
+      expect(await width).not.toBeGreaterThan(0);
       return width > 50 ? false : true;
     }
   }
 }
-
-module.exports = { BrokenImageLinks };

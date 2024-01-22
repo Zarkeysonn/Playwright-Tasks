@@ -21,7 +21,7 @@ test.describe("Happy flow of adding books to user", async () => {
 
   test("Happy flow!", async ({ userModules, bookModules }) => {
     authorizeUser = await userModules.authoriseUser({ user: usernamePass });
-    bookIsbn = await bookModules.getBook();
+    bookIsbn = await bookModules.getBook({});
     postBook = await bookModules.postBooksToUser({
       userId: userId,
       bookIsbn: bookIsbn,

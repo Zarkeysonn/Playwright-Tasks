@@ -13,7 +13,7 @@ const loginPayLoad = {
 
 test("Basic try", async ({ userModules }) => {
   const usernamePass = await userModules.setUsernamePassword(
-    "zarko1234",
+    loginData.existing_user_Username,
     loginData.password
   );
   response = await userModules.LoginUser({
@@ -36,7 +36,7 @@ test.describe("Positive login api testing", () => {
 
   test("Valid login scenario using utils file", async ({ userModules }) => {
     const usernamePass = await userModules.setUsernamePassword(
-      "zarko1234",
+      loginData.existing_user_Username,
       loginData.password
     );
     response = await userModules.LoginUser({

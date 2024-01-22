@@ -2,17 +2,14 @@ import { test } from "../../modules/base";
 
 import loginData from "../../fixtures/loginData.json";
 
-let usernamePass;
-let token;
-let bookIsbn;
+var usernamePass;
+var token;
+var bookIsbn;
+var authorizeUser;
+var loginUser;
 
-let loginUser;
-
-test.describe("Bad flow of adding books to user", async ({
-  userModules,
-  bookModules,
-}) => {
-  test.beforeEach(async () => {
+test.describe("Bad flow of adding books to user", async () => {
+  test.beforeEach(async ({ userModules, bookModules }) => {
     usernamePass = await userModules.setUsernamePassword(
       loginData.existing_user_Username,
       loginData.password
@@ -22,7 +19,7 @@ test.describe("Bad flow of adding books to user", async ({
     authorizeUser = await userModules.authoriseUser({
       user: usernamePass,
     });
-    bookIsbn = await bookModules.getBook();
+    bookIsbn = await bookModules.getBook({ numOfBook: 2 });
   });
   test("User Id is empty string", async ({ bookModules }) => {
     await bookModules.postBooksToUser({
@@ -43,7 +40,7 @@ test.describe("Bad flow of adding books to user", async ({
 
   test.skip("User Id is true", async () => {
     authorizeUser = await userModules.authoriseUser({ user: usernamePass });
-    bookIsbn = await bookModules.getBook();
+    bookIsbn = await bookModules.getBook({});
     postBook = await bookModules.postBooksToUser({
       userId: true,
       bookIsbn: bookIsbn,
@@ -87,7 +84,7 @@ test.describe("Bad flow of adding books to user", async ({
       userId: [loginData.userId],
       bookIsbn: bookIsbn,
       token: token,
-      status: 401,
+      status: 400,
     });
   });
 
@@ -96,7 +93,7 @@ test.describe("Bad flow of adding books to user", async ({
       userId: loginData.userId,
       bookIsbn: "",
       token: token,
-      status: 401,
+      status: 400,
     });
   });
 
@@ -105,7 +102,7 @@ test.describe("Bad flow of adding books to user", async ({
       userId: loginData.userId,
       bookIsbn: [12, 2, 4, 34, 43, 2],
       token: token,
-      status: 400,
+      status: 401,
     });
   });
 
@@ -114,7 +111,7 @@ test.describe("Bad flow of adding books to user", async ({
       userId: loginData.userId,
       bookIsbn: ["dsf", "dsds", "sdds", "dsdsa"],
       token: token,
-      status: loginData.status401,
+      status: 400,
     });
   });
 

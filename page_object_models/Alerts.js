@@ -1,56 +1,55 @@
 import { expect } from "@playwright/test";
+import data from "../fixtures/e2e_data.json";
 
-class Alerts {
-  constructor(wpage) {
-    this.wpage = wpage;
-    this.instantAlert = wpage.locator("#alertButton");
-    this.timerAlert = wpage.locator("#timerAlertButton");
-    this.confirmBox = wpage.locator("#confirmButton");
-    this.confirmResult = wpage.locator("#confirmResult");
-    this.promptBox = wpage.locator("#promtButton");
-    this.promptResult = wpage.locator("#promptResult");
+export class Alerts {
+  constructor(page) {
+    this.page = page;
+    this.instantAlert = page.locator("#alertButton");
+    this.timerAlert = page.locator("#timerAlertButton");
+    this.confirmBox = page.locator("#confirmButton");
+    this.confirmResult = page.locator("#confirmResult");
+    this.promptBox = page.locator("#promtButton");
+    this.promptResult = page.locator("#promptResult");
   }
 
   async handleInstantAlert() {
     // Enabling dialog window handler
-    await this.wpage.on("dialog", async (dialog) => {
-      expect(dialog.type()).toContain("alert");
-      expect(dialog.message()).toContain("You clicked a button");
+    await this.page.on("dialog", async (dialog) => {
+      expect(dialog.type()).toContain(data.alert);
+      expect(dialog.message()).toContain(data.clickButtonMssg);
       await dialog.accept();
     });
     await this.instantAlert.click();
   }
 
   async handleTimerAlert() {
-    await this.wpage.on("dialog", async (dialog) => {
-      expect(dialog.type()).toContain("alert");
-      expect(dialog.message()).toContain("This alert appeared after 5 seconds");
+    await this.page.on("dialog", async (dialog) => {
+      expect(dialog.type()).toContain(data.alert);
+      expect(dialog.message()).toContain(data.dialogAlertMssg);
       await dialog.accept();
     });
     await this.timerAlert.click();
-    await this.wpage.waitForTimeout(5000);
+    await this.page.waitForTimeout(5000);
+    await expect(this.timerAlert).toBeVisible();
   }
 
   async confirmAlert() {
-    await this.wpage.on("dialog", async (dialog) => {
-      expect(dialog.type()).toContain("confirm");
-      expect(dialog.message()).toContain("Do you confirm action?");
-      await dialog.accept(); // click on Ok
-      //await dialog.cancel(); // click on cancel
+    await this.page.on("dialog", async (dialog) => {
+      expect(dialog.type()).toContain(data.confirm);
+      expect(dialog.message()).toContain(data.dialogQuestion);
+      await dialog.accept();
     });
-
     await this.confirmBox.click();
-    expect(await this.confirmResult).toContainText("You selected Ok");
+    expect(await this.confirmResult).toContainText(data.OkSelected);
   }
 
   async promptAlert(someText) {
-    await this.wpage.on("dialog", async (dialog) => {
-      expect(dialog.type()).toContain("prompt");
-      expect(dialog.message()).toContain("Please enter your name");
+    await this.page.on("dialog", async (dialog) => {
+      expect(dialog.type()).toContain(data.prompt);
+      expect(dialog.message()).toContain(data.pleaseEnterName);
       await dialog.accept(someText);
     });
     this.promptBox.click();
     await expect(this.promptResult).toContainText(someText);
   }
 }
-module.exports = { Alerts };

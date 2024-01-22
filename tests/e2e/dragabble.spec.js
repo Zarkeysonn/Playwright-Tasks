@@ -60,7 +60,7 @@ test.describe("Dragabble page", async () => {
   });
 
   test("Get stick to center cursor style", async ({ dragDrop, wpage }) => {
-    await wpage.goto("https://demoqa.com/dragabble");
+    await wpage.goto("/dragabble");
     await wpage.click("#draggableExample-tab-cursorStyle", { force: true });
     await dragDrop.getCurrentCursor({
       element: dragDrop.stickToCenter,
@@ -69,7 +69,7 @@ test.describe("Dragabble page", async () => {
   });
 
   test("Get stick top left cursor style", async ({ dragDrop, wpage }) => {
-    await wpage.goto("https://demoqa.com/dragabble");
+    await wpage.goto("dragabble");
     await wpage.click("#draggableExample-tab-cursorStyle", { force: true });
     await dragDrop.getCurrentCursor({
       element: dragDrop.stickToLeft,
@@ -78,7 +78,7 @@ test.describe("Dragabble page", async () => {
   });
 
   test("Get stick to bottom cursor style", async ({ dragDrop, wpage }) => {
-    await wpage.goto("https://demoqa.com/dragabble");
+    await wpage.goto("/dragabble");
     await wpage.click("#draggableExample-tab-cursorStyle", { force: true });
     await dragDrop.getCurrentCursor({
       element: dragDrop.stickToBottom,
