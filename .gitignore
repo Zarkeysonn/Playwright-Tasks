@@ -4,4 +4,4 @@ testData.json
 sampleFile.jpeg
 index.html
 screenshotsFolder
-env
+env/.env
