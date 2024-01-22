@@ -1,0 +1,8 @@
+{
+  "dropped": "Dropped!",
+  "dropHere": "Drop here",
+  "innerGreedy": "Inner droppable (greedy)",
+  "innerNotGreedy": "Inner droppable (not greedy)",
+  "outterDroppable": "Outer droppable",
+  "innerDroppedGreedy": "Dropped!Inner droppable (greedy)"
+}

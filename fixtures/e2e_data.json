@@ -1,0 +1,32 @@
+{
+  "firstName": "Zarko",
+  "lastName": "Djurdjev",
+  "email": "djurdjev.zarko@gmail.com",
+  "age": "25",
+  "salary": "1200",
+  "department": "informatics",
+  "mobileNumber": "1234567891",
+  "currentAddress": "Suvoborska 1",
+  "state": "NCR",
+  "city": "Gurgaon",
+  "stateAndCity": "NCR Delhi",
+  "subjects": "Math",
+  "buttonStart": "Start",
+  "buttonStop": "Stop",
+  "buttonReset": "Reset",
+  "cursor": {
+    "auto": "auto",
+    "crosshair": "crosshair",
+    "move": "move"
+  },
+  "alert": "alert",
+  "confirm": "confirm",
+  "dialogQuestion": "Do you confirm action?",
+  "OkSelected": "You selected Ok",
+  "prompt": "prompt",
+  "pleaseEnterName": "Please enter your name",
+  "clickButtonMssg": "You clicked a button",
+  "stateOption": "NCR",
+  "cityOption": "Delhi",
+  "dialogAlertMssg": "This alert appeared after 5 seconds"
+}

@@ -1,0 +1,32 @@
+{
+  "name": "playwright-demoqa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test:api:login": "npx playwright test tests/apiTests/apiLogin.spec.js",
+    "register": "npx playwright test tests/apiTests/apiRegister.spec.js",
+    "positive_addBook": "npx playwright test tests/apiTests/apiPostBook.spec.js",
+    "negative_addBook": "npx playwright test tests/apiTests/negativeAddBook.spec.js",
+    "webTables": "npx playwright test tests/e2e/webTables.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zarkeysonn/Playwright-Tasks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zarkeysonn/Playwright-Tasks/issues"
+  },
+  "homepage": "https://github.com/Zarkeysonn/Playwright-Tasks#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.40.1",
+    "@types/node": "^20.10.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "moment": "^2.30.1"
+  }
+}
